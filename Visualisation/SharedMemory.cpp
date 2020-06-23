@@ -5,6 +5,8 @@
 
 #include <Windows.h>
 
+#include <iostream>
+
 #include "SharedMemory.hpp"
 
 using namespace std;
@@ -23,8 +25,10 @@ void SHM::launchEXE(std::string fileName) {
 		NULL,           // Use parent's starting directory 
 		&StartupInfo,            // Pointer to STARTUPINFO structure
 		&ProcessInfo)           // Pointer to PROCESS_INFORMATION structure
-		)
+		) {
+		std::cerr << "Could not launch process: " << fileName << std::endl;
 		throw std::exception("Could not launch process");
+	}
 
 	// Close process and thread handles. 
 	CloseHandle(ProcessInfo.hProcess);

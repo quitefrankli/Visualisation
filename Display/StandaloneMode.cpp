@@ -70,37 +70,6 @@ void standaloneMode() {
 	bool draw = true;
 	while (window.isOpen()) {
 		std::string retVal = window.pollEvents();
-		//if (retVal == "-") {
-		//	rectangle.scale(0.5f, 0.5f);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "=") {
-		//	rectangle.scale(2.0f, 2.0f);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "Left") {
-		//	rectangle.translate(-0.25, 0.0f);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "Right") {
-		//	rectangle.translate(0.25, 0.0f);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "Up") {
-		//	rectangle.translate(0.0f, 0.25);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "Down") {
-		//	rectangle.translate(0.0f, -0.25);
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "R") {
-		//	rectangle = Rectangle();
-		//	meshes.pop_back();
-		//	meshes.emplace_back(rectangle);
-		//} else if (retVal == "D") {
-		//	draw = !draw;
-		//}
 
 		window.clear();
 

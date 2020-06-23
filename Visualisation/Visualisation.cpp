@@ -12,6 +12,8 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <SimpleIni.h>
+#include <string>
 
 #include "Visualisation.hpp"
 #include "Maths.hpp"
@@ -57,8 +59,15 @@ Visualisation::Visualisation() :
 	vis = (SHM::VisualisationStruct*)sm.pData;
 	vis->ready = false;
 
-	// bit unfortunate to have to use an absolute path, can't think of a good way currently
-	SHM::launchEXE("C://Users//Nimda//programming//C++Libraries//MyEXEs//VisualisationDebug dependent " + tempString);
+	// relies on user to add the path Visualisation.exe to config.ini
+	CSimpleIniA config;
+	config.LoadFile("VisualisationConfig.ini");
+#ifdef _DEBUG
+	std::string path = config.GetValue("", "pathDebug");
+#else
+	std::string path = config.GetValue("", "path");
+#endif
+	SHM::launchEXE(path + " dependent " + tempString);
 
 	waitForExpected(vis->ready, true);
 }

@@ -1,23 +1,21 @@
 # Visualisation
 
 ## What Does It Do?
-Fast C++ interprocess visualisation tool
+Visualises data graphically
 
 ## Why?
-Because it's very useful for when you need to visualise large data without sacrificing speed whilst at the same time reducing the complexity required
+It's convenient to visualise large data without sacrificing speed or interrupting program flow at a minimal setup complexity
 
 ## Dependencies (x64-windows):
 * SDL2
 * glew
 * OpenGL
 * stb [Simple but robust image loader](https://github.com/nothings/stb)
+* SimpleIni
 
 ## Installation
 This is intended to be built on Windows in 64bit, but 32bit will also work provided the dependencies are also in 32bit.
-The easiest way to install is to clone the source code, create a new solution usin
-
-
-### What I have learn't
-* Parallel processing and interprocess communication
-* Modern graphics and glsl
-* Static and dynamic libraries
+Build 'Visualisation.lib' from 'Visualisation/' and 'Visualisation.exe' from 'Display/' and the previously built static library
+After editing the two, add the absolute path of 'Visualisation.exe' to 'VisualisationConfig.ini'
+```path=C:/your/path/to/Visualisation.exe```
+Include the header and don't forget to link 'Visualisation.lib'
