@@ -4,14 +4,23 @@
 		static library for 64 bit so that other programs can also be compiled on 64 bit instead of 32 bits
 */
 
+//
+// Visualisation is intended to be compiled as a static library so that
+// fast interprocess graphic visualisation can be achieved without long compile times
+//
+
 #include <iostream>
 #include <chrono>
 #include <thread>
 
-#include <MyLibs/Visualisation.hpp>
-#include <MyLibs/Maths.hpp>
+#include "Visualisation.hpp"
+#include "Maths.hpp"
 
 using VIS::Visualisation;
+
+//
+// helper functions
+//
 
 // 10s timeout
 static void waitForExpected(bool& actual, bool expected) {
@@ -25,6 +34,7 @@ static void waitForExpected(bool& actual, bool expected) {
 	throw std::exception("Error in VISUALISATION LIBRARY: Time Out Error");
 }
 
+// responsible for generating the 'key' to be given to other processes to access a shared memory space
 static std::string RandomString(int len) {
 	std::string randomString;
 	for (int i = 0; i < len; i++)
@@ -32,19 +42,23 @@ static std::string RandomString(int len) {
 	return randomString;
 }
 
+// 
+// member functions
+//
+
 Visualisation::Visualisation() :
 	tempString(RandomString(10)),
 	sm(tempString, sizeof(SHM::VisualisationStruct)) 
 {
 	if (!sm.SMCreate() || !sm.SMAccess())
-		throw std::string("Visualisation initialisation failed");
+		throw std::exception("Visualisation initialisation failed");
 
-	std::cerr << "Visualisation Initialisation success, launching visualiser..." << std::endl;
+	std::cout << "Visualisation Initialisation success, launching visualiser..." << std::endl;
 	vis = (SHM::VisualisationStruct*)sm.pData;
 	vis->ready = false;
 
 	// bit unfortunate to have to use an absolute path, can't think of a good way currently
-	StartUp("C://Users//Nimda//programming//C++Libraries//MyEXEs//VisualisationDebug dependent " + tempString);
+	SHM::launchEXE("C://Users//Nimda//programming//C++Libraries//MyEXEs//VisualisationDebug dependent " + tempString);
 
 	waitForExpected(vis->ready, true);
 }

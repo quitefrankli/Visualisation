@@ -26,7 +26,7 @@ using namespace this_thread;
 const int initialWindowWidth = 500;
 const int initialWindowHeight = 250;
 
-const std::string textureDirectory = "";
+const std::string textureDirectory = "Place your directory here";
 
 void standaloneMode() {
 	Window window("Standalone Mode", initialWindowWidth, initialWindowHeight);
@@ -37,6 +37,8 @@ void standaloneMode() {
 	srand(time(NULL));
 
 	std::list<Texture> textures;
+	if (!std::filesystem::exists(textureDirectory))
+		throw std::exception("Bad texture directory");
 	for (auto& entry : std::filesystem::directory_iterator(textureDirectory))
 		textures.emplace_back(entry.path().string());
 
