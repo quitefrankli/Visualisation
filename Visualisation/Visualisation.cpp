@@ -22,7 +22,7 @@ static void waitForExpected(bool& actual, bool expected) {
 			return;
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-	throw std::string("Error in VISUALISATION LIBRARY: Time Out Error");
+	throw std::exception("Error in VISUALISATION LIBRARY: Time Out Error");
 }
 
 static std::string RandomString(int len) {
@@ -42,6 +42,8 @@ Visualisation::Visualisation() :
 	std::cerr << "Visualisation Initialisation success, launching visualiser..." << std::endl;
 	vis = (SHM::VisualisationStruct*)sm.pData;
 	vis->ready = false;
+
+	// bit unfortunate to have to use an absolute path, can't think of a good way currently
 	StartUp("C://Users//Nimda//programming//C++Libraries//MyEXEs//VisualisationDebug dependent " + tempString);
 
 	waitForExpected(vis->ready, true);

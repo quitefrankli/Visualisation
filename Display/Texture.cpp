@@ -44,13 +44,13 @@ void Texture::loadData_fromRAM(unsigned char imageData[], int height, int width,
 		internalFormat = format = GL_RGBA;
 		break;
 	default:
-		throw std::string("BAD COLOR");
+		throw std::exception("BAD COLOR");
 		break;
 	}
 
 	// alignment issues here
 	if (padding != 1 && padding != 4)
-		throw std::string("BAD PADDING");
+		throw std::exception("BAD PADDING");
 	glPixelStorei(GL_UNPACK_ALIGNMENT, padding);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -62,7 +62,10 @@ void Texture::loadData_fromRAM(unsigned char imageData[], int height, int width,
 void Texture::open(const std::string& fileName) {
 	bool useSTB = true;
 	stbi_uc* imageData = stbi_load(fileName.c_str(), &width, &height, &numComponents, 4);
-	if (imageData == nullptr) { // might be our file
+
+	// sometimes it's convenient to store bitmap image without all the standard headers
+	// so it's nice to be able interpret a bitmap that only has the dimensions as the header
+	if (imageData == nullptr) {
 		std::ifstream imageFile(fileName, std::ios::in | std::ios::binary);
 
 		imageFile >> width;
@@ -79,7 +82,6 @@ void Texture::open(const std::string& fileName) {
 		return;
 	}
 
-	assert(imageData != nullptr);
 	this->fileName = fileName;
 	setGLTextureParams();
 

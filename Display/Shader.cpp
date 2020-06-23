@@ -9,36 +9,32 @@
 // Helper Functions
 //
 
-static std::string loadShader(const std::string& fileName) {
-	std::ifstream file(fileName);
-	if (!file.is_open())
-		throw std::exception("Could not load shader");
-
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-
-	return buffer.str();
-}
-
 static void checkShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage) {
 	GLint success = 0;
 	GLchar error[1024] = { 0 };
 
-	if (isProgram) glGetProgramiv(shader, flag, &success);
-	else glGetShaderiv(shader, flag, &success);
+	if (isProgram) 
+		glGetProgramiv(shader, flag, &success);
+	else 
+		glGetShaderiv(shader, flag, &success);
 
 	if (success == GL_FALSE) {
-		if (isProgram) glGetProgramInfoLog(shader, sizeof(error), NULL, error);
-		else glGetShaderInfoLog(shader, sizeof(error), NULL, error);
+		if (isProgram) 
+			glGetProgramInfoLog(shader, sizeof(error), NULL, error);
+		else 
+			glGetShaderInfoLog(shader, sizeof(error), NULL, error);
 		std::cerr << errorMessage << ": '" << error << "'" << std::endl;
+
+		throw std::exception(errorMessage.c_str());
 	}
 }
 
-static GLuint createShader(const std::string& text, GLenum shaderType) {
+static GLuint createShader(std::string text, GLenum shaderType) {
 	GLuint shader = glCreateShader(shaderType);
 
 	// build and compile shader text
-	_ASSERT(shader != 0);
+	if (shader == 0)
+		throw std::exception("Could not create shader");
 
 	const GLchar* shaderSourceStrings[1];
 	GLint shaderSourceStringLengths[1];
@@ -57,9 +53,9 @@ static GLuint createShader(const std::string& text, GLenum shaderType) {
 // Memeber Functions
 //
 
-Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader) {
-	shaders[0] = createShader(loadShader(vertexShader), GL_VERTEX_SHADER);
-	shaders[1] = createShader(loadShader(fragmentShader), GL_FRAGMENT_SHADER);
+Shader::Shader() {
+	shaders[0] = createShader(vertexShader, GL_VERTEX_SHADER);
+	shaders[1] = createShader(fragmentShader, GL_FRAGMENT_SHADER);
 
 	program = glCreateProgram();
 	for (size_t i = 0; i < NUM_SHADERS; i++)

@@ -3,9 +3,21 @@
 #include <string>
 #include <GL/glew.h>
 
+// bit of a hack to read file during compile time, TODO: compile shaders during compile time
+// https://stackoverflow.com/questions/20443560/how-to-practically-ship-glsl-shaders-with-your-c-software
+// see Jan Ruegg's response 
+
+const std::string vertexShader =
+#include "VertexShader.glsl"
+"";
+
+const std::string fragmentShader =
+#include "FragmentSHader.glsl"
+"";
+
 class Shader {
 public:
-	Shader(const std::string& vertexShader, const std::string& fragmentShader);
+	Shader();
 	~Shader();
 	void bind();
 

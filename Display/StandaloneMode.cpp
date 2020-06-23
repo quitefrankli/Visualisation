@@ -1,3 +1,11 @@
+//
+// Only useful for debugging purposes
+//
+
+//
+// Default standalone mode
+//
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -18,22 +26,12 @@ using namespace this_thread;
 const int initialWindowWidth = 500;
 const int initialWindowHeight = 250;
 
-//
-// REMOVE THIS
-//
-
-const std::string textureDirectory = "C:/Users/Nimda/Desktop/TestFolder";
-
-//
-// REMOVE THIS
-//
-
+const std::string textureDirectory = "";
 
 void standaloneMode() {
 	Window window("Standalone Mode", initialWindowWidth, initialWindowHeight);
 
-	std::string dir = "D:/Programming/Visual Studio/Visualisation/EXE/";
-	Shader shader(dir + "VertexShader.glsl", dir + "FragmentShader.glsl");
+	Shader shader;
 	shader.bind();
 
 	srand(time(NULL));

@@ -1,5 +1,13 @@
 #include <iostream>
 #include <chrono>
+//
+// Only useful for debugging purposes
+//
+
+//
+// Acts as an image viewer
+//
+
 #include <thread>
 #include <SDL2/SDL.h>
 
@@ -16,11 +24,9 @@ const int initialWindowWidth = 500;
 const int initialWindowHeight = 250;
 
 void viewMode(string fileName) {
-
 	Window window("View Mode", initialWindowWidth, initialWindowHeight);
 
-	std::string dir = "D:/Programming/Visual Studio/Visualisation/EXE/";
-	Shader shader(dir + "VertexShader.glsl", dir + "FragmentShader.glsl");
+	Shader shader;
 	shader.bind();
 
 	Texture texture(fileName);

@@ -22,10 +22,11 @@ Window::Window(std::string name, size_t height, size_t width) {
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
 	);
 	
-	if (window == nullptr) return;
+	if (window == nullptr)
+		throw std::exception("Could not create SDL window");
 	context = SDL_GL_CreateContext(window);
 	if (glewInit() != GLEW_OK)
-		throw std::string("Error: MyWindow");
+		throw std::exception("Could not create SDL_GL_Context");
 
 	this->height = height;
 	this->width = width;
@@ -35,7 +36,8 @@ Window::Window(std::string name, size_t height, size_t width) {
 
 Window::~Window() {
 	SDL_GL_DeleteContext(context);
-	if (window != nullptr) SDL_DestroyWindow(window);
+	if (window != nullptr)
+		SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 

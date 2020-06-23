@@ -1,8 +1,14 @@
+//
+// The main purpose of this program is to serve as a fast interprocess data visualiser
+// Display can also be built in debug mode and enable a console
+// Because Display relies on OpenGL, it can only be built as a 32 bit executable
+// However it's possible for 64 bit processes to communicate with it
+//
+
 #include <Windows.h>
 
 #include <sstream>
 #include <vector>
-#include <cassert>
 
 void standaloneMode();
 void dependentMode(std::string key);
@@ -19,13 +25,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	std::vector<std::string> cmdLine;
 	while (wss >> wstr)
 		cmdLine.emplace_back(std::string(wstr.begin(), wstr.end())); // this truncates the unicode
-
 #endif
-	assert(cmdLine.size() >= 0 && cmdLine.size() <= 2);
+	if (!(cmdLine.size() >= 0 && cmdLine.size() <= 2))
+		throw std::exception("Incorrect number of command line arguments");
 
 	if (cmdLine.empty())
 		standaloneMode();
-	else if (cmdLine[0] == "dependent")
+
+	// dependent mode is the main use of this program, other modes are for debugging only
+	else if (cmdLine[0] == "dependent") 
 		dependentMode(cmdLine[1]);
 	else
 		viewMode(cmdLine[0]);

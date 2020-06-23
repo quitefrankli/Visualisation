@@ -16,19 +16,26 @@ using namespace this_thread;
 
 void multistage(Window& window, SHM::VisualisationStruct* vis);
 
+//
+// Main purpose of this program, which is to visualise data sent by other processes
+//
+
 void dependentMode(string key) {
 	SHM::VisualisationStruct* vis;
 
+	// Shared memory
 	SMObject o_vis(key, sizeof(SHM::VisualisationStruct));
-	assert(o_vis.SMAccess());
+	if (!o_vis.SMAccess())
+		throw std::exception("Could not access shared memory");
+
 	vis = (SHM::VisualisationStruct *)(o_vis.pData);
 	Window window("Dependent Mode", SHM::initialWindowWidth, SHM::initialWindowHeight);
 
-	std::string dir = "C:/Users/Nimda/programming/Visualisation/Display/";
-	Shader shader(dir + "VertexShader.glsls", dir + "FragmentShader.glsls");
+	// Shaders, at the moment it's compiled at runtime, but in the future 
+	// it would be best if it was compiled at compile time
+	Shader shader;
 	shader.bind();
 
-	//Rectangle rectangle;
 	class Rectangle rectangle;
 	Mesh mesh(rectangle);
 	vis->ready = true;
@@ -43,6 +50,7 @@ void dependentMode(string key) {
 		if (vis->multistage)
 			multistage(window, vis);
 		else
+			// flush acts as a quick means of locking
 			if (vis->flush) {
 				window.resize(vis->width, vis->height);
 				window.clear();
@@ -58,6 +66,8 @@ void dependentMode(string key) {
 	}
 }
 
+// this mode allows for graphic data to be streamed one chunk at a time
+// instead of instantaneous, very useful for visualising collection of related data
 void multistage(Window& window, SHM::VisualisationStruct* vis) {
 	const int imageWidth = vis->width;
 	const int imageHeight = vis->height;
@@ -71,9 +81,7 @@ void multistage(Window& window, SHM::VisualisationStruct* vis) {
 
 	window.clear();
 
-	int row = 0;
-	int col = 0;
-	while (vis->multistage) {
+	for (int row = 0, col = 0; vis->multistage;) {
 		while (vis->flush == false)
 			sleep_for(milliseconds(1));
 
