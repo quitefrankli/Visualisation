@@ -23,6 +23,14 @@ namespace VIS {
 
 		void draw(const uint8_t* data, size_t width, size_t height, size_t colors, bool verticalFlip, bool swapRedBlue, int padding);
 		void draw(const uint8_t* data, size_t width, size_t height);
+		void draw(const std::byte* data, int width, int height)
+		{
+			draw(
+				reinterpret_cast<const uint8_t*>(data), 
+				static_cast<size_t>(width),
+				static_cast<size_t>(height)
+			);
+		}
 
 		inline bool isReady() { 
 			if (vis == nullptr)
