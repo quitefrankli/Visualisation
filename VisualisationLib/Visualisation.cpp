@@ -9,14 +9,18 @@
 // fast interprocess graphic visualisation can be achieved without long compile times
 //
 
+#include "Visualisation.hpp"
+#include "Maths.hpp"
+
 #include <iostream>
 #include <chrono>
 #include <thread>
 #include <SimpleIni.h>
 #include <string>
+#include <filesystem>
 
-#include "Visualisation.hpp"
-#include "Maths.hpp"
+#include <windows.h>
+#include <fmt/format.h>
 
 using VIS::Visualisation;
 
@@ -59,15 +63,22 @@ Visualisation::Visualisation() :
 	vis = (SHM::VisualisationStruct*)sm.pData;
 	vis->ready = false;
 
-	// relies on user to add the path Visualisation.exe to config.ini
-	CSimpleIniA config;
-	config.LoadFile("VisualisationConfig.ini");
-#ifdef _DEBUG
-	std::string path = config.GetValue("", "pathDebug");
-#else
-	std::string path = config.GetValue("", "path");
-#endif
-	SHM::launchEXE(path + " dependent " + tempString);
+	const int MAX_LENGTH = 1000;
+	char file_path[MAX_LENGTH];
+	GetModuleFileName(nullptr, file_path, MAX_LENGTH);
+	const std::string curr_exe_path(file_path);
+
+	const auto display_exe = std::filesystem::path(curr_exe_path).parent_path().append("VisualisationDisplay.exe");
+	if (!std::filesystem::exists(display_exe))
+	{
+		throw std::runtime_error(
+			fmt::format(
+				"Could not find VisualisationDisplay.exe at {}. "
+				"Make sure VisualisationDisplay.exe exists at path of current binary. "
+				"You may need to add a 'copy' in conanfile.imports", display_exe.string()));
+	}
+
+	SHM::launchEXE(display_exe.string() + " dependent " + tempString);
 
 	waitForExpected(vis->ready, true);
 }

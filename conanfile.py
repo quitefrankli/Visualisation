@@ -20,6 +20,7 @@ class manatee_conan(ConanFile):
 	}
 
 	requires = (
+		"fmt/8.0.1", # already included by quill
 	)
 
 	generators = (
@@ -27,12 +28,16 @@ class manatee_conan(ConanFile):
 		"cmake_find_package"
 	)
 
+	def package_info(self):
+		self.cpp_info.libs = self.collect_libs()
+		return super().package_info()
+
 	def imports(self):
 		# copies all dll to bin folder (win)
 		self.copy("*.dll", dst="bin", src="bin")
 		# copies all dll to bin folder (macosx)
 		self.copy("*.dylib*", dst="bin", src="lib")
-
+		
 	def build(self):
 		cmake = CMake(self, build_type=self.settings.build_type)
 		def process_option(option):
