@@ -8,11 +8,11 @@
 // see Jan Ruegg's response 
 
 const std::string vertexShader =
-#include "VertexShader.glsl"
+#include "Shaders/VertexShader.glsl"
 "";
 
 const std::string fragmentShader =
-#include "FragmentSHader.glsl"
+#include "Shaders/FragmentSHader.glsl"
 "";
 
 class Shader {

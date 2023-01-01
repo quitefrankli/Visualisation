@@ -3,7 +3,7 @@
 #include <thread>
 #include <SDL2/SDL.h>
 
-#include "../Visualisation/SharedMemory.hpp"
+#include <SharedMemory.hpp>
 
 #include "Shader.hpp"
 #include "Window.hpp"
